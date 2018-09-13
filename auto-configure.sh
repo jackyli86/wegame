@@ -2,6 +2,7 @@
 
 SkynetRemoteRepo='https://github.com/cloudwu/skynet.git'
 
+SkynetSelfRepo='git@f2095r1007.iask.in:/home/datadisk/gitrepo/skynet.git'
 GitVersion=`git --version`
 echo $GitVersion
 
@@ -14,7 +15,7 @@ SkynetDir=${ROOT_DIR}"/skynet"
 
 if  [ ! -d $SkynetDir ]
 then
-	git clone $SkynetRemoteRepo
+	git clone $SkynetSelfRepo
 fi
 
 cd skynet
@@ -25,8 +26,9 @@ GitRemoteRepo=`git remote -v`
 #echo $GitRemoteRepo >> ../repo.txt
 
 # print remote repo url
+echo off
 git remote -v | awk '{print $2}'
-
+echo on
 Urls=`git remote -v | awk '{ print $2}'`
 #echo $Urls
 CheckUrlResult=`echo $Urls | grep $SkynetRemoteRepo`
@@ -40,3 +42,5 @@ echo "begin add remote repo"
 git remote add skynet-remote $SkynetRemoteRepo
 
 echo "config sucess,congratulations"
+
+cd ..
