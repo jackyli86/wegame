@@ -10,19 +10,21 @@ local CMD = {}
 local REQUEST = {}
 local client_fd
 
+local function unpack(msg,sz)
+	
+end
 
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = function (msg, sz)
-		return msg
+		return skynet.tostring(msg,sz)
 	end,
 	dispatch = function (fd, _, type, msg)
 		assert(fd == client_fd)	-- You can use fd to reply message
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
-		skynet.trace()
 		
-		
+		--skynet.trace()		
 		skynet.error(msg)
 	end
 }
@@ -31,16 +33,6 @@ function CMD.start(conf)
 	local fd = conf.client
 	local gate = conf.gate
 	WATCHDOG = conf.watchdog
-
-
-	--[=[
-	skynet.fork(function()
-		while true do
-			send_package(send_request "heartbeat")
-			skynet.sleep(500)
-		end
-	end)
-	--]=]
 
 	client_fd = fd
 	skynet.call(gate, "lua", "forward", fd)
