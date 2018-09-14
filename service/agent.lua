@@ -17,13 +17,13 @@ skynet.register_protocol {
 	unpack = function (msg, sz)
 		return msg
 	end,
-	dispatch = function (fd, _, type, ...)
+	dispatch = function (fd, _, type, msg)
 		assert(fd == client_fd)	-- You can use fd to reply message
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		skynet.trace()
 		
 		
-		skynet.error(...)
+		skynet.error(msg)
 	end
 }
 
@@ -41,7 +41,7 @@ function CMD.start(conf)
 		end
 	end)
 	--]=]
-	
+
 	client_fd = fd
 	skynet.call(gate, "lua", "forward", fd)
 end
