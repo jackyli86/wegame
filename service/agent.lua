@@ -3,21 +3,16 @@ local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 
 local WATCHDOG
-local host
-local send_request
-
-local CMD = {}
-local REQUEST = {}
 local client_fd
 
-local function unpack(msg,sz)
-	
-end
+local CMD = {}
+
 
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = function (msg, sz)
+		-- todo self testing
 		return skynet.tostring(msg,sz)
 	end,
 	dispatch = function (fd, _, msg)
