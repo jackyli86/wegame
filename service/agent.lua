@@ -17,10 +17,13 @@ skynet.register_protocol {
 	end,
 	dispatch = function (fd, _, msg)
 		assert(fd == client_fd)	-- You can use fd to reply message
-		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 
+		--skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()		
+
 		skynet.error(msg)
+
+		skynet.ret("hello client",strlen("hello client"))
 	end
 }
 
