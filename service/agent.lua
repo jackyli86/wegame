@@ -7,6 +7,10 @@ local client_fd
 
 local CMD = {}
 
+local function send_package(pack)
+	local package = string.pack(">s2", pack)
+	socket.write(client_fd, package)
+end
 
 skynet.register_protocol {
 	name = "client",
@@ -23,7 +27,7 @@ skynet.register_protocol {
 
 		skynet.error(msg)
 		
-		skynet.ret("hello client",string.len("hello client"))
+		send_package("hello client");	
 	end
 }
 
