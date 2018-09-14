@@ -22,8 +22,8 @@ skynet.register_protocol {
 		--skynet.trace()		
 
 		skynet.error(msg)
-
-		skynet.ret("hello client",strlen("hello client"))
+		
+		skynet.ret("hello client",string.len("hello client"))
 	end
 }
 
