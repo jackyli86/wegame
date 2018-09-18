@@ -27,7 +27,7 @@ skynet.register_protocol {
 
 		skynet.error(msg)
 		
-		send_package("hello client");	
+		send_package("glad to recieve your message");	
 	end
 }
 

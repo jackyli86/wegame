@@ -14,7 +14,7 @@ local function send_package(fd, pack)
 	socket.send(fd, package)
 
 	if(pack == "quit") then
-		socket.closed(fd)
+		socket.close(fd)
 		print("bye,skynet")
 	end
 end
