@@ -7,7 +7,7 @@ end
 
 local socket = require "client.socket"
 
-local fd = assert(socket.connect("127.0.0.1", 8888))
+local fd = assert(socket.connect("127.0.0.1", 8001))
 
 local function send_package(fd, pack)
 	local package = string.pack(">s2", pack)
