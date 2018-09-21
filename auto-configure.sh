@@ -15,6 +15,7 @@ SkynetDir=${ROOT_DIR}"/skynet"
 
 if  [ ! -d $SkynetDir ]
 then
+	echo "git clone $SkynetSelfRep ..."
 	git clone $SkynetSelfRepo
 fi
 
@@ -26,14 +27,12 @@ GitRemoteRepo=`git remote -v`
 #echo $GitRemoteRepo >> ../repo.txt
 
 # print remote repo url
-echo off
-git remote -v | awk '{print $2}'
-echo on
-Urls=`git remote -v | awk '{ print $2}'`
+#git remote -v | awk 'BEGIN{url=""} { if(url==""&&$2=="https://github.com/cloudwu/skynet.git"){ url=$2} } END{ print url}'
+Urls=`git remote -v | awk 'BEGIN{url=""} { if(url==""&&$2=="https://github.com/cloudwu/skynet.git"){ url=$2} } END{ print url}'`
 #echo $Urls
 CheckUrlResult=`echo $Urls | grep $SkynetRemoteRepo`
 if [[ $CheckUrlResult != "" ]]; then
-	echo "have add remote repo"
+	echo "have add skynet remote repo"
 	exit
 fi
 
