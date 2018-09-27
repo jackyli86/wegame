@@ -25,7 +25,9 @@ lua_path = skynet_path .. game_path
 lua_load_path = ""
 
 -- lua so search path --
-lua_cpath = root .. "luaclib/?.so"
+skynet_lua_cpath = root .. "luaclib/?.so;"
+game_lua_cpath = root .. "../luaclib/?.so;"
+lua_cpath = skynet_lua_cpath .. game_lua_cpath 
 
 -- snax path --
 snax = root.."examples/?.lua;"..root.."test/?.lua"
