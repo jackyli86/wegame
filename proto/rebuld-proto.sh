@@ -3,7 +3,7 @@
 
 filelist=`ls -l | awk '{ print $9 }'`
 
-echo $filelist
+#echo $filelist
 
 filenamesuffix='.proto'
 generatefilesuffix='.pb'
@@ -23,6 +23,14 @@ do
 		filename=${i:0:$filenamelen}
 		#echo $i,$filename	
 	    	sudo protoc --descriptor_set_out ${filename}${generatefilesuffix} $i
+
+		# protoc return code
+		if [ $? -eq 0 ]
+		then
+			echo $i"==============>>>"${filename}${generatefilesuffix}
+		else
+			echo -e "\033[41;30m"$i"===============>>>"${filename}${generatefilesuffix}"\033[0m"
+		fi
 	fi
 	#echo $i
 done
