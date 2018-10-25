@@ -25,9 +25,9 @@ skynet.register_protocol {
 		--skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()		
 
-		skynet.error(msg)
+		skynet.call('.fishpool','lua','msg_dispatch','hello fishpool service')		
 		
-		send_package("glad to recieve your message");	
+		--send_package("glad to recieve your message");	
 	end
 }
 
@@ -43,6 +43,10 @@ end
 function CMD.disconnect()
 	-- todo: do something before exit
 	skynet.exit()
+end
+
+function CMD.msg_ret(msg)
+	send_package(msg)
 end
 
 skynet.start(function()
