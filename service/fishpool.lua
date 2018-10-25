@@ -4,7 +4,7 @@ local CMD = {}
 
 function CMD.msg_dispatch(msg)
 	skynet.error(msg)
-    return 'msg_ret',msg
+    return msg
 end
 
 skynet.start(function()
