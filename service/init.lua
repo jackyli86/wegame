@@ -27,8 +27,10 @@ skynet.start(function()
     
     skynet.error("Server start")
 
-    skynet.newservice("gameserver");
+    skynet.newservice("gameserver")
 
+    fishpool = skynet.newservice("fishpool")
+    skynet.name('.fishpool',fishpool)
 	-- 该端口已被禅道占用
     --skynet.newservice("gameserver_8888");
 	skynet.exit()
