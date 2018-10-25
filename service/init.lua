@@ -1,4 +1,5 @@
-local skynet = require "manager"
+local skynet = require "skynet"
+require "skynet.manager"
 
 local max_client = 64
 
