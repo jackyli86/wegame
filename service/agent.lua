@@ -25,9 +25,9 @@ skynet.register_protocol {
 		--skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()		
 
-		skynet.call('.fishpool','lua','msg_dispatch','hello fishpool service')		
+		local msg = skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent')
 		
-		--send_package("glad to recieve your message");	
+		send_package(msg);	
 	end
 }
 
@@ -52,6 +52,7 @@ end
 skynet.start(function()
 	skynet.dispatch("lua", function(_,_, command, ...)
 		-- skynet.trace()
+		skynet.error(command)
 		local f = CMD[command]
 		skynet.ret(skynet.pack(f(...)))
 	end)

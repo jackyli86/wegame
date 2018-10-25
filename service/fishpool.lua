@@ -3,6 +3,7 @@ local skynet = require "skynet"
 local CMD = {}
 
 function CMD.msg_dispatch(msg)
+	skynet.error(msg)
     return 'msg_ret',msg
 end
 
