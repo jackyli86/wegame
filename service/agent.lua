@@ -22,7 +22,7 @@ skynet.register_protocol {
 	dispatch = function (fd, _, msg)
 		assert(fd == client_fd)	-- You can use fd to reply message
 
-		--skynet.ignoreret()	-- session is fd, don't call skynet.ret
+		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()		
 
 		local msg = skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
