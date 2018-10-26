@@ -25,6 +25,24 @@ skynet.register_protocol {
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()		
 
+		--[[
+			msgid,
+			cmd,			
+			data,
+
+			解析出msgid,cmd
+			解析出消息结构
+
+			function Msg(msgid,serviceName)
+				local msg_processor = {
+					'begin' = begin,
+					'end' = end,
+					'name' = serviceName
+				}
+				return msg_processor
+			end
+		--]]
+
 		local msg = skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
 		
 		send_package(msg);	
