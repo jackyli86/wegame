@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+require "skynet.manager"
 local msgrouter = require "msgrouter"
 local protobuf = require "protobuf"
     
@@ -13,7 +14,7 @@ skynet.start(function()
     }
 
     -- 注册pb files
-    for pbfile in ipairs(pb_files) do
+    for _,pbfile in ipairs(pb_files) do
         protobuf.register_file(root_path .. pbfile)
     end
 
