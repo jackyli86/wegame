@@ -13,7 +13,7 @@ skynet.start(function()
     }
 
     -- 注册pb files
-    for pbfile in ipairs(bp_files) do
+    for pbfile in ipairs(pb_files) do
         protobuf.register_file(root_path .. pbfile)
     end
 
