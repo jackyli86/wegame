@@ -33,7 +33,7 @@ skynet.register_protocol {
 			解析出msgid,cmd
 			解析出消息结构
 
-			function Msg(msgid,serviceName)
+			function Msg(msgid,name,structname)
 				local msg_processor = {
 					'begin' = begin,
 					'end' = end,
@@ -42,6 +42,15 @@ skynet.register_protocol {
 				return msg_processor
 			end
 		--]]
+		
+		local template = {
+			msgid 	= 1,
+			name  	= '.fishpool',
+			command = 'command',
+			c2s 	= 'c2s_login',
+			s2c     = 's2c_loginret'
+		}
+		-- skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
 
 		local msg = skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
 		

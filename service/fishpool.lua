@@ -1,5 +1,5 @@
 local skynet = require "skynet"
-
+require "skynet.manager"
 local CMD = {}
 
 function CMD.msg_dispatch(msg)
@@ -13,4 +13,6 @@ skynet.start(function()
 		local f = CMD[command]
 		skynet.ret(skynet.pack(f(...)))
 	end)
+
+	skynet.name('.fishpool',skynet.self())
 end)
