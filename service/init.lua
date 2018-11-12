@@ -10,15 +10,27 @@ local function tproto()
     root_path = skynet.getenv('root')
 
     protobuf.register_file(root_path .. '../proto/test.pb')
+    local test_msg = {
+        header = {
+            msg_id = 1,
+            decode_key = 2,
+        },
+        bb = 22,
+        cc = 33
+    }
 
-    stringbuffer = protobuf.encode("at",{
-        aa = 1222 
-    })
+    stringbuffer = protobuf.encode("at",test_msg)
 
 
-    local data = protobuf.decode("at",stringbuffer)
+    local data1 = protobuf.decode("msg_header",stringbuffer)
 
-    skynet.error("proto test : " .. data.aa)
+    local data2 = protobuf.decode("at",stringbuffer)
+
+    dump(data1)
+    dump(data2)
+
+    skynet.error("proto test : " .. data1.header.msg_id .. data1.header.decode_key)
+    skynet.error("proto test : " .. data2.aa)
 
 end
 

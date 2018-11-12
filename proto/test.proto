@@ -1,7 +1,12 @@
 syntax="proto2";
 
+message msg_header {
+    required int32 msg_id = 1;
+    required int32 decode_key = 2;
+}
+
 message at {
-        optional int32 aa = 1;
-        optional int32 bb = 2;
-        optional string cc = 3;
+    required msg_header header = 1;    
+    optional int32 bb = 2;
+    optional string cc = 3;
 }
