@@ -9,6 +9,11 @@ function CMD.msg_dispatch(msg)
     return msg
 end
 
+function CMD.login(msg_id,msg)
+	skynet.error(msg_id)
+    return msg
+end
+
 skynet.start(function()
 	skynet.dispatch("lua", function(_,_, command, ...)
 		-- skynet.trace()

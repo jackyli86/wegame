@@ -25,10 +25,8 @@ end
 
 ]]
 
+MsgRegister(0,'.fishpool','header','msg_header','msg_header')
 MsgRegister(1,'.fishpool','login','c2s_login','s2c_loginret')
-MsgRegister(2,'.fishpool','login','c2s_login','s2c_loginret')
-MsgRegister(3,'.fishpool','login','c2s_login','s2c_loginret')
-
 
 
 return msg_router

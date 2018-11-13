@@ -5,8 +5,10 @@ message msg_header {
     required int32 decode_key = 2;
 }
 
-message at {
-    required msg_header header = 1;    
-    optional int32 bb = 2;
-    optional string cc = 3;
+message c2s_login {
+    required string uuid = 1;    
+}
+
+message s2c_loginret {
+    required int32 result = 1;
 }

@@ -1,22 +1,43 @@
-package.cpath = "luaclib/?.so"
-package.path = "lualib/?.lua;examples/?.lua"
+package.cpath = "luaclib/?.so;../luaclib/?.so"
+package.path = "lualib/?.lua;examples/?.lua;../lib/?.lua"
 
 if _VERSION ~= "Lua 5.3" then
 	error "Use lua 5.3"
 end
 
 local socket = require "client.socket"
+local protobuf = require "protobuf"
+local msgrouter = require "msgrouter"
+
+protobuf.register_file("../proto/test.pb");
 
 local fd = assert(socket.connect("127.0.0.1", 8001))
 
-local function send_package(fd, pack)
-	local package = string.pack(">s2", pack)
-	socket.send(fd, package)
-
+local function say_bye(fd)
+	local pack = "quit"
 	if(pack == "quit") then
 		socket.close(fd)
 		print("bye,skynet")
 	end
+end
+
+local function send_msg(fd,msg_id,decode_key,msg_table)
+	local msg_header = protobuf.encode('msg_header',{
+		msg_id = msg_id,
+		decode_key = decode_key
+	})
+
+	local msg_header_len = strlen(msg_header)
+
+	assert(msgrouter[msg_id])
+	local msg_def = msgrouter[msg_id]
+
+	local msg_body = protobuf.encode(msg_def.c2s,msg_table)
+	local msg_body_len = strlen(msg_body)
+
+	local msg_send = string.format("%3d%s%s",msg_header_len,msg_header,msg_body)
+
+	socket.send(fd,msg_send)
 end
 
 local function unpack_package(text)
@@ -71,9 +92,9 @@ while true do
 	local cmd = socket.readstdin()
 	if cmd then
 		if cmd == "quit" then
-			send_package(fd,"quit")
+			say_bye(fd)
 		else
-			send_package(fd,cmd)
+			send_msg(fd,1,1,{uuid=cmd})
 		end
 	else
 		socket.usleep(100)

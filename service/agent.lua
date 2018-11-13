@@ -2,6 +2,17 @@ local skynet = require "skynet"
 local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 
+local protobuf = require "protobuf"
+local root_path = skynet.getenv('root')
+local pb_files = {
+	'../proto/test.pb'
+}
+
+-- 注册pb files
+for _,pbfile in ipairs(pb_files) do
+	protobuf.register_file(root_path .. pbfile)
+end
+
 local WATCHDOG
 local client_fd
 
@@ -15,45 +26,26 @@ end
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
-	unpack = function (msg, sz)
-		-- todo self testing
-		return skynet.tostring(msg,sz)
+	unpack = function (msg, sz)		
+		local msg_header_len = tonumber(string.sub(msg,1,3))
+		local msg_header = string.sub(msg,4,msg_header_len)
+		local msg_body = string.sub(msg,1 + 3 + msg_header_len)
+
+		-- name,command,msg
+		local _,_,msg_header = skynet.call('.msgparser','lua',0,msg_header)
+		skynet.error(msg_header.msg_id .. ':' .. msg_header.decode_key)
+		
+		--msg_id,name,command,msg
+		return msg_header.msg_id,skynet.call('.msgparser','lua',msg_header.msg_id,msg_body)
 	end,
-	dispatch = function (fd, _, msg)
+	dispatch = function (fd, _,msg_id,name,command,msg)
 		assert(fd == client_fd)	-- You can use fd to reply message
 
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
-		--skynet.trace()		
+		--skynet.trace()
 
-		--[[
-			msgid,
-			cmd,			
-			data,
-
-			解析出msgid,cmd
-			解析出消息结构
-
-			function Msg(msgid,name,structname)
-				local msg_processor = {
-					'begin' = begin,
-					'end' = end,
-					'name' = serviceName
-				}
-				return msg_processor
-			end
-		--]]
-		
-		local template = {
-			msgid 	= 1,
-			name  	= '.fishpool',
-			command = 'command',
-			c2s 	= 'c2s_login',
-			s2c     = 's2c_loginret'
-		}
-		-- skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
-
-		local msg = skynet.call('.fishpool','lua','msg_dispatch','agent => fishpool => agent my-mgs=>' .. msg)
-		
+		local msg = skynet.call(name ,'lua' ,command ,msg_id ,msg )
+		skynet.error("uuid:" .. msg.uuid)
 		send_package(msg);	
 	end
 }
