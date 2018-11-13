@@ -27,13 +27,13 @@ local function send_msg(fd,msg_id,decode_key,msg_table)
 		decode_key = decode_key
 	})
 
-	local msg_header_len = strlen(msg_header)
+	local msg_header_len = string.len(msg_header)
 
 	assert(msgrouter[msg_id])
 	local msg_def = msgrouter[msg_id]
 
 	local msg_body = protobuf.encode(msg_def.c2s,msg_table)
-	local msg_body_len = strlen(msg_body)
+	local msg_body_len = string.len(msg_body)
 
 	local msg_send = string.format("%3d%s%s",msg_header_len,msg_header,msg_body)
 
@@ -86,7 +86,7 @@ local function dispatch_package()
 	end
 end
 
-send_package(fd,"handshake")
+--send_package(fd,"handshake")
 while true do
 	dispatch_package()
 	local cmd = socket.readstdin()
