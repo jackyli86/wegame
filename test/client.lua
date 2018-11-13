@@ -27,15 +27,13 @@ local function send_msg(fd,msg_id,decode_key,msg_table)
 		decode_key = decode_key
 	})
 
-	local msg_header_len = string.len(msg_header)
 
+	local msg_header = string.pack(">s2", msg_header)
 	assert(msgrouter[msg_id])
 	local msg_def = msgrouter[msg_id]
 
 	local msg_body = protobuf.encode(msg_def.c2s,msg_table)
-	local msg_body_len = string.len(msg_body)
-
-	local msg_send = string.format("%3d%s%s",msg_header_len,msg_header,msg_body)
+	msg_send = string.pack(">s2", msg_header .. msg_body)
 
 	socket.send(fd,msg_send)
 end

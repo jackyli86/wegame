@@ -26,9 +26,9 @@ end
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
-	unpack = function (msg, sz)		
-		local msg_header_len = tonumber(string.sub(msg,1,3))
-		local msg_header = string.sub(msg,4,msg_header_len)
+	unpack = function (msg, sz)	
+		local msg_header_len = string.byte(msg,1)*256 + string.byte(msg,2)		
+		local msg_header = string.sub(msg,1 + 2,msg_header_len)
 		local msg_body = string.sub(msg,1 + 3 + msg_header_len)
 
 		-- name,command,msg
