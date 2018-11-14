@@ -22,7 +22,9 @@ skynet.start(function()
         skynet.error('new_msg:' .. msgid)
         assert(msgrouter[msgid])
         local msg_def = msgrouter[msgid];
-        skynet.ret(skynet.pack(msg_def.name,msg_def.command,protobuf.decode(msg_def.c2s,msg)))
+
+        -- ret msg name command
+        skynet.ret(skynet.pack(protobuf.decode(msg_def.c2s,msg),msg_def.name,msg_def.command))
     end)
     
     skynet.name('.msgparser',skynet.self())
