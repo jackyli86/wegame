@@ -27,30 +27,28 @@ skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = function (msg, sz)	
-		local msg_recv = skynet.tostring(msg,sz)
-		-- assert(msg_len == sz)
+		return skynet.tostring(msg,sz)
+	end,
+	dispatch = function (fd, _,msg)
+		assert(fd == client_fd)	-- You can use fd to reply message
 
-		local msg_header_len = string.byte(msg_recv,1)*256 + string.byte(msg_recv,2)		
-		local msg_header = string.sub(msg_recv,1 + 2,msg_header_len)	
-		local msg_body = string.sub(msg_recv,1 + 3 + msg_header_len)	
+		skynet.ignoreret()	-- session is fd, don't call skynet.ret
+		--skynet.trace()
+
+		local msg_header_len = string.byte(msg,1)*256 + string.byte(msg,2)		
+		local msg_header = string.sub(msg,1 + 2,msg_header_len)	
+		local msg_body = string.sub(msg,1 + 3 + msg_header_len)	
 		skynet.error("headerlen:" .. msg_header_len,"bodylen:" .. (sz - 4 - msg_header_len))	
 		skynet.error("header:" .. type(msg_header),"body:" .. type(msg_body))	
 		-- name,command,msg
 		local _,_,msg_header = skynet.call('.msgparser','lua',0,msg_header)
 		skynet.error(msg_header.msg_id .. ':' .. msg_header.decode_key)
 		
-		--msg_id,name,command,msg
-		return msg_header.msg_id,skynet.call('.msgparser','lua',msg_header.msg_id,msg_body)
-	end,
-	dispatch = function (fd, _,msg_id,name,command,msg)
-		assert(fd == client_fd)	-- You can use fd to reply message
+		local name,command,msg_body = skynet.call('.msgparser','lua',msg_header.msg_id,msg_body)
 
-		skynet.ignoreret()	-- session is fd, don't call skynet.ret
-		--skynet.trace()
-
-		local msg = skynet.call(name ,'lua' ,command ,msg_id ,msg )
-		skynet.error("uuid:" .. msg.uuid)
-		send_package(msg);	
+		local msg_body = skynet.call(name ,'lua' ,command ,msg_id ,msg_body )
+		skynet.error("uuid:" .. msg_body.uuid)
+		send_package(msg_body);	
 	end
 }
 
