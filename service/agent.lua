@@ -27,22 +27,27 @@ skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = function (msg, sz)	
-		return skynet.tostring(msg,sz)
+		return skynet.tostring(msg,sz),sz
 	end,
-	dispatch = function (fd, _,msg)
+	dispatch = function (fd, _,msg,sz)
 		assert(fd == client_fd)	-- You can use fd to reply message
 
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()
 
 		local msg_header_len = string.byte(msg,1)*256 + string.byte(msg,2)		
+		
 		local msg_header = string.sub(msg,1 + 2,msg_header_len)	
 		local msg_body = string.sub(msg,1 + 3 + msg_header_len)	
+
+		skynet.error("msglen:" .. sz,"headerlen:" .. msg_header_len,"bodylen:" .. (sz - 2 - msg_header_len))
+		skynet.error("msglen:" .. msg:len(),"headerlen:" .. msg_header:len(),"bodylen:" .. msg_body:len())
+
 		-- name,command,msg
 		local _,_,msg_header = skynet.call('.msgparser','lua',0,msg_header)
-		for key,val in pairs(msg_header) do
-			skynet.error(key,val)
-		end
+		print(msg_header.msg_id)
+		print(msg_header.decode_key)
+
 	
 		local name,command,msg_body = skynet.call('.msgparser','lua',msg_header.msg_id,msg_body)
 		skynet.error(name,command)

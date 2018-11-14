@@ -22,20 +22,22 @@ local function say_bye(fd)
 end
 
 local function send_msg(fd,msg_id,decode_key,msg_table)
-	local msg_header = protobuf.encode('msg_header',{
+	local msg_header_src = protobuf.encode('msg_header',{
 		msg_id = msg_id,
 		decode_key = decode_key
 	})
 
-	local t = protobuf.decode('msg_header',msg_header)
+	local t = protobuf.decode('msg_header',msg_header_src)
 	print(t.msg_id,t.decode_key)
-	
-	local msg_header = string.pack(">s2", msg_header)
+
+	local msg_header = string.pack(">s2", msg_header_src)
 	assert(msgrouter[msg_id])
 	local msg_def = msgrouter[msg_id]
 
 	local msg_body = protobuf.encode(msg_def.c2s,msg_table)
 	msg_send = string.pack(">s2", msg_header .. msg_body)
+
+	print("header1:"..msg_header_src:len(),"header2:"..msg_header:len(),"body1:"..msg_body:len(),"body2:"..msg_send:len())
 
 	socket.send(fd,msg_send)
 end
