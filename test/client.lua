@@ -27,7 +27,9 @@ local function send_msg(fd,msg_id,decode_key,msg_table)
 		decode_key = decode_key
 	})
 
-
+	local t = protobuf.decode('msg_header',msg_header)
+	print(t.msg_id,t.decode_key)
+	
 	local msg_header = string.pack(">s2", msg_header)
 	assert(msgrouter[msg_id])
 	local msg_def = msgrouter[msg_id]
