@@ -19,6 +19,7 @@ skynet.start(function()
     end
 
     skynet.dispatch("lua", function(_, _, msgid,msg)
+        skynet.error('new_msg:' .. msgid)
         assert(msgrouter[msgid])
         local msg_def = msgrouter[msgid];
         skynet.ret(skynet.pack(msg_def.name,msg_def.command,protobuf.decode(msg_def.c2s,msg)))
