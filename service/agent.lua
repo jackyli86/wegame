@@ -37,8 +37,8 @@ skynet.register_protocol {
 
 		local msg_header_len = string.byte(msg,1)*256 + string.byte(msg,2)		
 		local msg_without_header = string.sub(msg,2 + 1)
-		local msg_header = string.sub(msg_without_header,1,1 + msg_header_len)
-		local msg_body   = string.sub(msg_without_header,1 + msg_header_len + 1)	
+		local msg_header = string.sub(msg_without_header,1,msg_header_len)
+		local msg_body   = string.sub(msg_without_header,msg_header_len + 1)	
 
 		skynet.error("msglen:" .. sz,"headerlen:" .. msg_header_len,"bodylen:" .. (sz - 2 - msg_header_len))
 		skynet.error("msglen:" .. msg:len(),"headerlen:" .. msg_header:len(),"bodylen:" .. msg_body:len())
