@@ -2,6 +2,7 @@ local skynet = require "skynet"
 local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 
+local json = require "json.json"
 local protobuf = require "protobuf"
 local root_path = skynet.getenv('root')
 local pb_files = {
@@ -60,8 +61,9 @@ skynet.register_protocol {
 		local msg_body,name,command = skynet.call('.msgparser','lua',msg_header.msg_id,src_msg_body)
 		-- skynet.error(name,command)
 		local msg_ret = skynet.call(name ,'lua' ,command ,msg_header.msg_id ,msg_body )
+		local msg_json_ret = json.encode(msg_ret)
 		
-		send_package(msg_ret);	
+		send_package(string.pack('>2',msg_json_ret));	
 	end
 }
 
