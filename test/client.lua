@@ -51,7 +51,7 @@ local function unpack_package(text)
 	if size < s+2 then
 		return nil, text
 	end
-
+	
 	return text:sub(3,2+s), text:sub(3+s)
 end
 
