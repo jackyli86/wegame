@@ -11,7 +11,10 @@ end
 
 function CMD.login(msg_id,msg)
 	skynet.error(msg_id)
-    return msg
+
+    return {
+		result = msg.uuid
+	}
 end
 
 skynet.start(function()

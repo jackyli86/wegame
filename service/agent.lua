@@ -52,7 +52,9 @@ skynet.register_protocol {
 		-- skynet.error(name,command)
 
 		local msg_ret = skynet.call(name ,'lua' ,command ,msg_header.msg_id ,msg_body )
-		send_package(msg_json_ret);
+
+		skynet.error("ret:"..json.encode(msg_ret))
+		send_package(msg_ret);
 	end
 }
 
