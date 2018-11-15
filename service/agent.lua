@@ -63,7 +63,7 @@ skynet.register_protocol {
 		local msg_ret = skynet.call(name ,'lua' ,command ,msg_header.msg_id ,msg_body )
 		local msg_json_ret = json.encode(msg_ret)
 		
-		send_package(string.pack('>2',msg_json_ret));	
+		send_package(string.pack('>s2',msg_json_ret));	
 	end
 }
 
