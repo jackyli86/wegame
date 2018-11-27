@@ -40,18 +40,17 @@ skynet.register_protocol {
 
 		return msg_header,msg_body
 	end,
-	dispatch = function (fd, _,src_msg_header,src_msg_body)
+	dispatch = function (fd, _,msg_header,msg_body)
 		assert(fd == client_fd)	-- You can use fd to reply message
 
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()
 
-		-- msg,name,command
-		local msg_header = skynet.call('.msgparser','lua',0,src_msg_header)
-		local msg_body,name,command = skynet.call('.msgparser','lua',msg_header.msg_id,src_msg_body)
+		--msgid,msg,name,command
+		local msgid,msg,name,command = skynet.call('.msgparser','lua','decode',msg_header,msg_body)
 		-- skynet.error(name,command)
 
-		local msg_ret = skynet.call(name ,'lua' ,command ,msg_header.msg_id ,msg_body )
+		local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
 
 		skynet.error("ret:"..json.encode(msg_ret))
 		send_package(msg_ret);

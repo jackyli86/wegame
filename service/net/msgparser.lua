@@ -18,13 +18,22 @@ skynet.start(function()
         protobuf.register_file(root_path .. pbfile)
     end
 
-    skynet.dispatch("lua", function(_, _, msgid,msg)
-        skynet.error('new_msg:' .. msgid)
-        assert(msgrouter[msgid])
-        local msg_def = msgrouter[msgid];
+    skynet.dispatch("lua", function(_, _,type, header, body)
+        -- skynet.error('new_msg:' .. msgid)
+        if type == 1 then
 
-        -- ret msg name command
-        skynet.ret(skynet.pack(protobuf.decode(msg_def.c2s,msg),msg_def.name,msg_def.command))
+        else
+
+        end
+
+        local struct_header = msgrouter[0];
+        header = protobuf.decode(struct_header.c2s,header)
+        assert(header.msg_id and header.decode_key)
+        assert(msgrouter[header.msg_id])
+        
+        local struct_body = msgrouter[header.msg_id]
+        -- msgid msg name command
+        skynet.ret(skynet.pack(header.msg_id,protobuf.decode(struct_body.c2s,body),struct_body.name,struct_body.command))
     end)
     
     skynet.name('.msgparser',skynet.self())
