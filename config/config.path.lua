@@ -2,7 +2,10 @@
 root = "./"
 
 -- game project path
-game_service = root.."../service/?.lua;"..root.."../service/?/init.lua;"
+game_service = root.."../service/?.lua;"
+.. root.."../service/?/init.lua;"
+.. root.."../service/net/?.lua;"
+.. root.."../service/game_modules/?.lua;"
 
 -- skynet inner service 
 skynet_service = root.."service/?.lua;"
