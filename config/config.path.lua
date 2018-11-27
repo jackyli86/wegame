@@ -3,7 +3,6 @@ root = "./"
 
 -- game project path
 game_service = root.."../service/?.lua;"
-.. root.."../service/?/init.lua;"
 .. root.."../service/net/?.lua;"
 .. root.."../service/game_modules/?.lua;"
 
