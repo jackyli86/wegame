@@ -3,6 +3,7 @@ local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 
 local json = require "json.json"
+
 local protobuf = require "protobuf"
 local root_path = skynet.getenv('root')
 local pb_files = {
@@ -46,14 +47,13 @@ skynet.register_protocol {
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		--skynet.trace()
 
+		-- unpack
 		--msgid,msg,name,command
-		local msgid,msg,name,command = skynet.call('.msgparser','lua','decode',msg_header,msg_body)
-		-- skynet.error(name,command)
-
+		local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg_header,msg_body)
 		local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
-
-		skynet.error("ret:"..json.encode(msg_ret))
-		send_package(msg_ret);
+		-- pack
+		local msg_send = skynet.call('.msgparser','lua','pack',msgid,1,msg_ret)
+		send_package(msg_send);
 	end
 }
 
