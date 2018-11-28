@@ -95,12 +95,12 @@ local function dispatch_package()
 
 
 		local struct_header = msgrouter[0];
-		msg_header = protobuf.decode(struct_header.c2s,msg_header)
+		msg_header = protobuf.decode(struct_header.s2c,msg_header)
 		assert(msg_header.msg_id and msg_header.decode_key)
 
 		assert(msgrouter[msg_header.msg_id])
 		local struct_body = msgrouter[msg_header.msg_id]
-		local body = protobuf.decode(struct_body.c2s,msg_body)
+		local body = protobuf.decode(struct_body.s2c,msg_body)
 
 		print(json.encode(body))
 		--print(v)
