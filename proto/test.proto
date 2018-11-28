@@ -10,5 +10,15 @@ message c2s_login {
 }
 
 message s2c_loginret {
-    required int32 result = 1;
+    required string result = 1;
 }
+
+message c2s_register {
+    required string name = 1;
+    required string pwd  = 2;
+}
+
+message s2c_registerret {
+    required string result = 1;
+}
+

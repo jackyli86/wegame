@@ -10,7 +10,7 @@ function CMD.msg_dispatch(msg)
 end
 
 function CMD.login(msg_id,msg)
-	skynet.error(msg_id)
+	skynet.error(msg_id,msg)
 
     return {
 		result = msg.uuid

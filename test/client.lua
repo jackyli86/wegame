@@ -93,7 +93,6 @@ local function dispatch_package()
 		_msg_offset = _msg_offset + msg_header_len
 		local msg_body = _msg:sub(1 + _msg_offset);
 
-
 		local struct_header = msgrouter[0];
 		msg_header = protobuf.decode(struct_header.s2c,msg_header)
 		assert(msg_header.msg_id and msg_header.decode_key)
