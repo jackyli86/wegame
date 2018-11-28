@@ -100,7 +100,7 @@ local function dispatch_package()
 		assert(msgrouter[msg_header.msg_id])
 		local struct_body = msgrouter[msg_header.msg_id]
 		local body = protobuf.decode(struct_body.s2c,msg_body)
-		setmetetable(body,nil)
+		setmetatable(body,nil)
 		print(json.encode(body))
 		--print(v)
 	end
