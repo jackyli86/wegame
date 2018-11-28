@@ -101,7 +101,7 @@ local function dispatch_package()
 		local struct_body = msgrouter[msg_header.msg_id]
 		local body = protobuf.decode(struct_body.s2c,msg_body)
 
-		print(json.encode(body))
+		print(json.decode(body))
 		--print(v)
 	end
 end
