@@ -8,6 +8,7 @@ end
 local socket = require "client.socket"
 local protobuf = require "protobuf"
 local msgrouter = require "msgrouter"
+local json = require "json.json"
 
 protobuf.register_file("../proto/test.pb");
 
@@ -78,13 +79,31 @@ local last = ""
 
 local function dispatch_package()
 	while true do
-		local v
-		v, last = recv_package(last)
-		if not v then
+		local _msg
+		_msg, last = recv_package(last)
+		if not _msg then
 			break
 		end
 
-		print(v)
+		local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
+
+		local _msg_offset = 2;
+		local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
+
+		_msg_offset = _msg_offset + msg_header_len
+		local msg_body = _msg:sub(1 + _msg_offset);
+
+
+		local struct_header = msgrouter[0];
+		msg_header = protobuf.decode(struct_header.c2s,msg_header)
+		assert(msg_header.msg_id and msg_header.decode_key)
+
+		assert(msgrouter[msg_header.msg_id])
+		local struct_body = msgrouter[msg_header.msg_id]
+		local body = protobuf.decode(struct_body.c2s,msg_body)
+
+		print(json.encode(body))
+		--print(v)
 	end
 end
 

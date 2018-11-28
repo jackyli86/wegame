@@ -21,9 +21,7 @@ local client_fd
 local CMD = {}
 
 local function send_package(pack)
-	pack = json.encode(pack)
-	local package = string.pack(">s2", pack)
-	socket.write(client_fd, package)
+	socket.write(client_fd, pack)
 end
 
 skynet.register_protocol {
