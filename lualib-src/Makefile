@@ -3,7 +3,7 @@ SKYNET_LIBS := -lpthread -lm
 SHARED := -fPIC --shared
 EXPORT := -Wl,-E
 
-LUA_CLIB_PATH ?= luaclib
+LUA_CLIB_PATH ?= ../luaclib
 BUILD_PATH ?= .
 CFLAGS = -g -O2 -Wall -I$(LUA_INC) -I$(AOI_INC) -I$(SKYNET_INC)
 
