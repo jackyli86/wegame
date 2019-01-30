@@ -1,4 +1,5 @@
 local skynet = require "skynet"
+require "skynet.manager"
 local aoi = require "aoi"
 
 local random = math.random
