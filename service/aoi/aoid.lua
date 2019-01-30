@@ -1,6 +1,8 @@
 local skynet = require "skynet"
 local aoi = require "aoi"
 
+
+
 local random = math.random
 
 local space
