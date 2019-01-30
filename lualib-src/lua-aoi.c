@@ -1,7 +1,5 @@
-/*
- *
- *  AOI 
- * 
+/**
+ * AOI
  */
 
 #define LUA_LIB
@@ -34,6 +32,12 @@ laoi_callback(void *ud, uint32_t watcher, uint32_t marker)
 {
     lua_State* L = ud;
 
+    luaL_checktype(L,lua_upvalueindex(1),LUA_TFUNCTION);
+    lua_pushvalue(L,lua_upvalueindex(1));
+    lua_pushinteger(L,watcher);
+    lua_pushinteger(L,marker);
+
+    lua_pcall(L,2,0,0);
 }
 
 int
@@ -120,6 +124,7 @@ int
 lset_aoi_callback(lua_State* L)
 {
     assert(lua_isfunction(L,1));
+
     return 0;
 }
 
@@ -136,5 +141,6 @@ int
 luaopen_aoi(lua_State* L)
 {
     luaL_newlib(L,aoilib);
+ 
     return 1;
 }
