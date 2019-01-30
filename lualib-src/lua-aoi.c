@@ -37,32 +37,8 @@ laoi_callback(void *ud, uint32_t watcher, uint32_t marker)
     lua_pushinteger(L,watcher);
     lua_pushinteger(L,marker);
 
-    int r = lua_pcall(L,2,0,0);
-	if (r == LUA_OK) {
-		return 0;
-	}
-
-    /*
-	const char * self = skynet_command(context, "REG", NULL);
-	switch (r) {
-	case LUA_ERRRUN:
-		skynet_error(context, "lua call [%x to %s : %d msgsz = %d] error : " KRED "%s" KNRM, source , self, session, sz, lua_tostring(L,-1));
-		break;
-	case LUA_ERRMEM:
-		skynet_error(context, "lua memory error : [%x to %s : %d]", source , self, session);
-		break;
-	case LUA_ERRERR:
-		skynet_error(context, "lua error in error : [%x to %s : %d]", source , self, session);
-		break;
-	case LUA_ERRGCMM:
-		skynet_error(context, "lua gc error : [%x to %s : %d]", source , self, session);
-		break;
-	};
-
-	lua_pop(L,1);
-    */
-
-	return 0;
+    // don't care result
+    lua_pcall(L,2,0,0);
 }
 
 static int
