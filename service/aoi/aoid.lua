@@ -66,7 +66,7 @@ local function mainloop()
             aoi.aoi_update2d(space,obj_id,objInfo.mode,objInfo.position[1],objInfo[2])
         end
         
-
+        aoi.aoi_message(space)
         skynet.sleep(5000)
     end
 end
