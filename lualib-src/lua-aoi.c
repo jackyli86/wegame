@@ -112,12 +112,15 @@ laoi_message(lua_State* L)
     struct aoi_space* space = lua_touserdata(L,1);
 
     aoi_message(space,laoi_callback,L);
+
+    return 0;
 }
 
 int
 lset_aoi_callback(lua_State* L)
 {
     assert(lua_isfunction(L,1));
+    return 0;
 }
 
 static const luaL_Reg aoilib[] = {

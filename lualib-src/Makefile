@@ -18,4 +18,7 @@ LUA_CLIB_SKYNET = \
   lua-aoi.c \
 
 all :
-	$(CC) $(CFLAGS) $(SHARED) $(LUA_CLIB_SKYNET) -o aoi.so 
+	$(CC) $(CFLAGS) $(SHARED) $(LUA_CLIB_SKYNET) -o $(LUA_CLIB_PATH)/aoi.so 
+
+clean :
+	rm -f $(LUA_CLIB_PATH)/aoi.so
