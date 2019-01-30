@@ -67,13 +67,14 @@ local function mainloop()
         end
         
         aoi.aoi_message(space)
-        skynet.sleep(5000)
+        skynet.sleep(100)
     end
 end
 
 skynet.start(function()
     space = aoi.aoi_create();
-    debug.setupvalue(aoi.aoi_message,1,lua_aoi_callback)
+    aoi.set_callback(lua_aoi_callback)
+    
     skynet.fork(mainloop);
 
     skynet.name('.aoid',skynet.self())

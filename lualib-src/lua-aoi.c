@@ -31,13 +31,39 @@ void
 laoi_callback(void *ud, uint32_t watcher, uint32_t marker)
 {
     lua_State* L = ud;
+    struct skynet_context* context = lua_touserdata(L,lua_upvalueindex(1));
 
-    luaL_checktype(L,lua_upvalueindex(1),LUA_TFUNCTION);
-    lua_pushvalue(L,lua_upvalueindex(1));
+    lua_rawgetp(L, LUA_REGISTRYINDEX, laoi_callback);
+    // luaL_checktype(L,-1,)
     lua_pushinteger(L,watcher);
     lua_pushinteger(L,marker);
 
-    lua_pcall(L,2,0,0);
+    int r = lua_pcall(L,2,0,0);
+	if (r == LUA_OK) {
+		return 0;
+	}
+
+    /*
+	const char * self = skynet_command(context, "REG", NULL);
+	switch (r) {
+	case LUA_ERRRUN:
+		skynet_error(context, "lua call [%x to %s : %d msgsz = %d] error : " KRED "%s" KNRM, source , self, session, sz, lua_tostring(L,-1));
+		break;
+	case LUA_ERRMEM:
+		skynet_error(context, "lua memory error : [%x to %s : %d]", source , self, session);
+		break;
+	case LUA_ERRERR:
+		skynet_error(context, "lua error in error : [%x to %s : %d]", source , self, session);
+		break;
+	case LUA_ERRGCMM:
+		skynet_error(context, "lua gc error : [%x to %s : %d]", source , self, session);
+		break;
+	};
+
+	lua_pop(L,1);
+    */
+
+	return 0;
 }
 
 static int
@@ -120,12 +146,24 @@ laoi_message(lua_State* L)
     return 0;
 }
 
+static int 
+laoi_set_callback(lua_State* L)
+{
+    luaL_checktype(L,1,LUA_TFUNCTION);
+    lua_settop(L,1);
+    lua_rawsetp(L, LUA_REGISTRYINDEX, laoi_callback);
+
+    lua_pushboolean(L,1);
+    return 1;
+}
+
 static const luaL_Reg aoilib[] = {
   {"aoi_create", laoi_create},
   {"aoi_release", laoi_release},
   {"aoi_update2d",laoi_update2d},
   {"aoi_update3d",laoi_update3d},
   {"aoi_message",laoi_message},
+  {"aoi_set_callback",laoi_set_callback},
   {NULL, NULL}
 };
 
@@ -133,6 +171,6 @@ LUA_API int
 luaopen_aoi(lua_State* L)
 {
     luaL_newlib(L,aoilib);
- 
+
     return 1;
 }
