@@ -8,6 +8,7 @@ local space
 local gen_id = 1
 local tickcounter = 1
 local objs = {}
+local objs_count = 0
 
 local function genid()
     id = gen_id
@@ -47,8 +48,8 @@ end
 
 local function mainloop()
     while(true) do
-        size = count(objs)
-        if size < 100 then
+
+        if objs_count < 100 then
             obj_id = genid()
             objs[obj_id] = {
                 speed = {1,1,0},
@@ -56,6 +57,7 @@ local function mainloop()
                 mode = 'wm',
             }
 
+            objs_count = objs_count + 1
             aoi.aoi_update2d(space,obj_id,objs[obj_id].mode,objs[obj_id].position[1],objs[obj_id].position[2])
         end
 
