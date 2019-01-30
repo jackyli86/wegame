@@ -70,7 +70,7 @@ end
 
 skynet.start(function()
     space = aoi.aoi_create();
-    setupvalue(aoi.aoi_message,1,lua_aoi_callback)
+    debug.setupvalue(aoi.aoi_message,1,lua_aoi_callback)
     skynet.fork(mainloop);
 
     skynet.name('.aoid',skynet.self())
