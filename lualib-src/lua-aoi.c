@@ -31,7 +31,6 @@ void
 laoi_callback(void *ud, uint32_t watcher, uint32_t marker)
 {
     lua_State* L = ud;
-    struct skynet_context* context = lua_touserdata(L,lua_upvalueindex(1));
 
     lua_rawgetp(L, LUA_REGISTRYINDEX, laoi_callback);
     // luaL_checktype(L,-1,)
