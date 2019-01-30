@@ -50,9 +50,8 @@ local function mainloop()
         if size < 100 then
             obj_id = genid()
             objs[obj_id] = {
-                speed = [1,1,0],
-
-                position = [random(0,200),random(0,200),0],
+                speed = {1,1,0},
+                position = {random(0,200),random(0,200),0},
                 mode = 'wm',
             }
 
