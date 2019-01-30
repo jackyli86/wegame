@@ -74,7 +74,7 @@ laoi_update2d(lua_State* L)
     float pos_z = 0;
 
     float pos[] = {pos_x,pos_y,pos_z};
-    aoi_update(space,obj_id,pos);
+    aoi_update(space,obj_id,mode,pos);
     
     return 0;
 }
@@ -100,7 +100,7 @@ laoi_update3d(lua_State* L)
     float pos_z = lua_tonumber(L,6);
     float pos[] = {pos_x,pos_y,pos_z};
     
-    aoi_update(space,obj_id,pos);
+    aoi_update(space,obj_id,mode,pos);
 
     return 0;
 }
