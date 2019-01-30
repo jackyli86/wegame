@@ -16,6 +16,7 @@ CC ?= gcc
 
 LUA_CLIB_SKYNET = \
   lua-aoi.c \
+  aoi.c \
 
 all :
 	$(CC) $(CFLAGS) $(SHARED) $(LUA_CLIB_SKYNET) -o $(LUA_CLIB_PATH)/aoi.so 
