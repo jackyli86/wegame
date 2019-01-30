@@ -43,6 +43,8 @@ skynet.start(function()
     skynet.newservice("msgparser")
     skynet.newservice("fishpool")
 
+    skynet.newservice("aoid")
+    
 	-- 该端口已被禅道占用
     --skynet.newservice("gameserver_8888");
 	skynet.exit()

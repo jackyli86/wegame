@@ -5,6 +5,7 @@ root = "./"
 game_service = root.."../service/?.lua;"
 .. root.."../service/net/?.lua;"
 .. root.."../service/game_modules/?.lua;"
+.. root.."../service/aoi/?.lua;"
 
 -- skynet inner service 
 skynet_service = root.."service/?.lua;"
