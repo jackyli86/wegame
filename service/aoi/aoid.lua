@@ -73,8 +73,8 @@ end
 
 skynet.start(function()
     space = aoi.aoi_create();
-    aoi.set_callback(lua_aoi_callback)
-    
+    aoi.aoi_set_callback(lua_aoi_callback)
+
     skynet.fork(mainloop);
 
     skynet.name('.aoid',skynet.self())
