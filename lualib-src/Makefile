@@ -9,14 +9,15 @@ CFLAGS = -g -O2 -Wall -I$(LUA_INC) -I$(AOI_INC) -I$(SKYNET_INC)
 
 SKYNET_INC ?= ../skynet/skynet-src
 LUA_INC ?= ../skynet/3rd/lua
-AOI_INC ?= aoi
+AOI_INC ?= ./aoi
 
 CC ?= gcc
 
 
 LUA_CLIB_SKYNET = \
+  ./aoi/aoi.c \
   lua-aoi.c \
-  aoi.c \
+
 
 all :
 	$(CC) $(CFLAGS) $(SHARED) $(LUA_CLIB_SKYNET) -o $(LUA_CLIB_PATH)/aoi.so 

@@ -1,8 +1,6 @@
 local skynet = require "skynet"
 local aoi = require "aoi"
 
-
-
 local random = math.random
 
 local space
@@ -72,7 +70,7 @@ end
 
 skynet.start(function()
     space = aoi.aoi_create();
-    setupvalue(space.aoi_message,lua_aoi_callback)
+    setupvalue(aoi.aoi_message,lua_aoi_callback)
     skynet.fork(mainloop);
 
     skynet.name('.aoid',skynet.self())
