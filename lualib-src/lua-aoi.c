@@ -40,7 +40,7 @@ laoi_callback(void *ud, uint32_t watcher, uint32_t marker)
     lua_pcall(L,2,0,0);
 }
 
-int
+static int
 laoi_create(lua_State* L)
 {
     struct aoi_space* space = aoi_create(laoi_alloc,NULL);
@@ -48,7 +48,7 @@ laoi_create(lua_State* L)
     return 1;
 }
 
-int
+static int
 laoi_release(lua_State* L)
 {
     assert(lua_islightuserdata(L,1));
@@ -65,7 +65,7 @@ laoi_release(lua_State* L)
  *  float pos_x 
  *  float pos_y
  */
-int
+static int
 laoi_update2d(lua_State* L)
 {
     assert(lua_islightuserdata(L,1)&&lua_gettop(L)==5);
@@ -91,7 +91,7 @@ laoi_update2d(lua_State* L)
  *  float pos_y
  *  float pos_z
  */
-int
+static int
 laoi_update3d(lua_State* L)
 {
     assert(lua_islightuserdata(L,1)&&lua_gettop(L)==6);
@@ -109,21 +109,13 @@ laoi_update3d(lua_State* L)
     return 0;
 }
 
-int
+static int
 laoi_message(lua_State* L)
 {
     assert(lua_islightuserdata(L,1));
     struct aoi_space* space = lua_touserdata(L,1);
 
     aoi_message(space,laoi_callback,L);
-
-    return 0;
-}
-
-int
-lset_aoi_callback(lua_State* L)
-{
-    assert(lua_isfunction(L,1));
 
     return 0;
 }
