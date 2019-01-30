@@ -137,7 +137,7 @@ static const luaL_Reg aoilib[] = {
   {NULL, NULL}
 };
 
-int 
+LUA_API int 
 luaopen_aoi(lua_State* L)
 {
     luaL_newlib(L,aoilib);
