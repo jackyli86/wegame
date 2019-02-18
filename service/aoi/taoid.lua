@@ -3,7 +3,7 @@ require "skynet.manager"
 
 local CMD = {}
 
-local fmod = math.mod
+local fmod = math.fmod
 local random = math.random
 
 local npcBornId = 0;
