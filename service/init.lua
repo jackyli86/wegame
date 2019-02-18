@@ -44,6 +44,7 @@ skynet.start(function()
     skynet.newservice("fishpool")
 
     skynet.newservice("aoid")
+    skynet.newservice("taoid")
     
 	-- 该端口已被禅道占用
     --skynet.newservice("gameserver_8888");

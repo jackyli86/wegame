@@ -18,7 +18,8 @@
 #include "aoi.h"
 
 static void *
-laoi_alloc(void * ud, void *ptr, size_t sz) {
+laoi_alloc(void * ud, void *ptr, size_t sz) 
+{
 	if (ptr == NULL) {
 		void *p = skynet_malloc(sz);
 		return p;

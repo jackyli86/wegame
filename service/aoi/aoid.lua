@@ -3,79 +3,66 @@ require "skynet.manager"
 local aoi = require "aoi"
 
 local random = math.random
+local table = table
 
 local space
-local gen_id = 1
-local tickcounter = 1
-local objs = {}
-local objs_count = 0
-
-local function genid()
-    id = gen_id
-    gen_id = gen_id + 1
-    return id
-end
-
+local aoi_msg = {}
+local CMD = {}
 
 local function lua_aoi_callback(watcherid,markerid)
-    watcher = objs[watcherid]
-    marker = objs[markerid]
+    aoi_msg[watcherid] = aoi_msg[watcherid] or {}
 
-    watchermsg = watcherid..':'..'['..watcher.position[1]..','..watcher.position[1]..']'
-    markermsg = markerid..':'..'['..marker.position[1]..','..marker.position[1]..']'
+    table.insert(aoi_msg[watcherid],markerid)
 
-    msg = '['..watchermsg..'=>'..markermsg..']'
-    skynet.error(msg)
-end
-
-local function walk(objInfo)
-    objInfo.position[1] = objInfo.position[1] + objInfo.speed[1]
-    objInfo.position[2] = objInfo.position[2] + objInfo.speed[2]
-    objInfo.position[3] = objInfo.position[3] + objInfo.speed[3]
-
-    if objInfo.position[1] > 200 then
-        objInfo.position[1] = 0;
-    end
-
-    if objInfo.position[2] > 200 then
-        objInfo.position[2] = 0;
-    end
-
-    if objInfo.position[3] > 200 then
-        objInfo.position[3] = 0;
-    end    
+    --[[
+        watchermsg = watcherid
+        markermsg = markerid
+        msg = '['..watchermsg..'=>'..markermsg..']'
+        skynet.error(msg)
+    ]]
 end
 
 local function mainloop()
-    while(true) do
+    while(true) do  
 
-        if objs_count < 100 then
-            obj_id = genid()
-            objs[obj_id] = {
-                speed = {1,1,0},
-                position = {random(0,200),random(0,200),0},
-                mode = 'wm',
-            }
+        aoi.aoi_message(space)
 
-            objs_count = objs_count + 1
-            aoi.aoi_update2d(space,obj_id,objs[obj_id].mode,objs[obj_id].position[1],objs[obj_id].position[2])
-        end
-
-        for obj_id , objInfo in pairs(objs) do
-            walk(objInfo);
-            aoi.aoi_update2d(space,obj_id,objInfo.mode,objInfo.position[1],objInfo[2])
+        for watcherid , markers in pairs(aoi_msg) do
+            skynet.call(
+                '.taoid',
+                'lua',
+                'aoi_callback'
+                watcherid,
+                markers
+            )
         end
         
-        aoi.aoi_message(space)
+        -- clear aoi msg ,put this operate here ,because aoi.aoi_update2d produce aoi_msg too
+        aoi_msg = {}  
         skynet.sleep(100)
+
     end
 end
 
+function CMD.aoi_enter(id,mode,pos_x,pos_y)
+    aoi.aoi_update2d(space,id,mode,pos_x,pos_y)
+end
+
+function CMD.aoi_leave(id)
+    aoi.aoi_update2d(space,id,'d',0,0)
+end
+
 skynet.start(function()
+
+    skynet.dispatch('lua',function(_,source,cmd,...)
+        skynet.ignoreret()
+        CMD[cmd](...)
+    end)
+
     space = aoi.aoi_create();
     aoi.aoi_set_callback(lua_aoi_callback)
 
-    skynet.fork(mainloop);
-
     skynet.name('.aoid',skynet.self())
+
+    skynet.fork(mainloop);
 end)
