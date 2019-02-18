@@ -28,6 +28,13 @@ local function mainloop()
         aoi.aoi_message(space)
 
         for watcherid , markers in pairs(aoi_msg) do
+            msg = watcherid .. ' => ['
+            for markerid in ipairs(markers) do
+                msg = msg .. markerid .. ','
+            end
+            msg = msg .. ' ]'
+        
+            skynet.error(msg)
             skynet.call(
                 '.taoid',
                 'lua',
