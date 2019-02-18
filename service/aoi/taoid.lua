@@ -72,7 +72,7 @@ local function mainloop()
         end
 
         counter = counter + 1
-        skynet.sleep(100)
+        skynet.sleep(10)
     end
 end
 
