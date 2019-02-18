@@ -31,7 +31,7 @@ local function mainloop()
             skynet.call(
                 '.taoid',
                 'lua',
-                'aoi_callback'
+                'aoi_callback',
                 watcherid,
                 markers
             )
