@@ -32,7 +32,7 @@ cd pbc
 make
 if [ $? != 0 ]
 then
-	exit('make pbc static lib failed')
+	exit 1
 fi
 
 
@@ -42,7 +42,7 @@ sed -i "s/${oldcontent}/${newcontent}/g" Makefile
 make
 if [ $? != 0 ]
 then
-	exit('make protobuf.so failed')
+	exit 2
 fi
 
 
@@ -57,7 +57,7 @@ cd ../../../
 rm -Rf pbc
 
 
-echo "\n"
+
 echo "****************************"
 echo "******configure ok !!!******"
 echo "****************************"
