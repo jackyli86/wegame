@@ -13,28 +13,22 @@ local function lua_aoi_callback(watcherid,markerid)
     aoi_msg[watcherid] = aoi_msg[watcherid] or {}
 
     table.insert(aoi_msg[watcherid],markerid)
-
+    
+    -- skynet.error('aoi_callback')
     --[[
         watchermsg = watcherid
         markermsg = markerid
         msg = '['..watchermsg..'=>'..markermsg..']'
         skynet.error(msg)
     ]]
+
 end
 
 local function mainloop()
     while(true) do  
-
         aoi.aoi_message(space)
 
         for watcherid , markers in pairs(aoi_msg) do
-            msg = watcherid .. ' => ['
-            for markerid in ipairs(markers) do
-                msg = msg .. markerid .. ','
-            end
-            msg = msg .. ' ]'
-        
-            skynet.error(msg)
             skynet.call(
                 '.taoid',
                 'lua',
@@ -52,20 +46,24 @@ local function mainloop()
 end
 
 function CMD.aoi_enter(id,mode,pos_x,pos_y)
-    skynet.error('aoi_enter:{'..id..','..mode..','..pos_x..','..pos_y..'}')
+    -- skynet.error('aoi_enter:{'..id..','..mode..','..pos_x..','..pos_y..'}')
     aoi.aoi_update2d(space,id,mode,pos_x,pos_y)
 end
 
 function CMD.aoi_leave(id)
-    skynet.error('aoi_leave:{'..id..'}')
+    -- skynet.error('aoi_leave:{'..id..'}')
     aoi.aoi_update2d(space,id,'d',0,0)
 end
 
 skynet.start(function()
 
     skynet.dispatch('lua',function(_,source,cmd,...)
-        skynet.ignoreret()
-        CMD[cmd](...)
+        if cmd == nil then
+            return
+        end       
+
+        -- must call skynet.ret ,otherwise the call actor would be block 
+        skynet.ret(skynet.pack(CMD[cmd](...)))
     end)
 
     space = aoi.aoi_create();

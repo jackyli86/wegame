@@ -43,12 +43,13 @@ local function mainloop()
             npcset[generateBornId()] = {
                 mode  = 'wm',
                 speed = random(2,5),
-                pos_x = random(1,100),
-                pos_y = random(1,100),
+                pos_x = random(1,30),
+                pos_y = random(1,30),
             }  
         end
     
         for npcid , npcinfo in pairs(npcset) do
+            -- skynet.error("enter_1")
             skynet.call(
                 '.aoid',
                 'lua',
@@ -62,17 +63,18 @@ local function mainloop()
             npcinfo.pos_x = npcinfo.pos_x + npcinfo.speed
             npcinfo.pos_y = npcinfo.pos_y + npcinfo.speed
     
-            if npcinfo.pos_x > 200 then
+            if npcinfo.pos_x > 30 then
                 npcinfo.pos_x = 1
             end
     
-            if npcinfo.pos_y > 200 then
+            if npcinfo.pos_y > 30 then
                 npcinfo.pos_y = 1
             end        
         end
 
         counter = counter + 1
-        skynet.sleep(10)
+        -- skynet.error("counter:"..counter)
+        skynet.sleep(50)
     end
 end
 
@@ -88,8 +90,12 @@ end
 
 skynet.start(function()
     skynet.dispatch('lua',function(_,_,cmd,...)
-        skynet.ignoreret()
-        CMD[cmd](...)
+        if cmd == nil then
+            return
+        end
+        
+        -- must call skynet.ret ,otherwise the call actor would be block
+        skynet.ret(skynet.pack(CMD[cmd](...)))
     end)
 
     skynet.name('.taoid',skynet.self())
