@@ -22,25 +22,36 @@ protobuf_so_path="${rootdir}/luaclib"
 oldcontent="\/usr\/local\/include"
 newcontent="\/data\/work\/wegame\/skynet\/3rd\/lua" #${lua53dir}
 
+
 # make pbc static lib
 cd pbc  
 make
+if [ $? != 0 ]
+then
+	exit('make pbc static lib failed')
+fi
 
-cd binding/lua53
 
 # modify lua path & make protobuf.so
+cd binding/lua53
 sed -i "s/${oldcontent}/${newcontent}/g" Makefile
 make
+if [ $? != 0 ]
+then
+	exit('make protobuf.so failed')
+fi
+
 
 # copy protobuf.lua&protobuf.so
-
 echo "begin  copy protobuf.lua&protobuf.so ..."
 cp -f protobuf.lua ${protobuf_lua_path}
 cp -f protobuf.so ${protobuf_so_path}
 echo "finish copy protobuf.lua&protobuf.so !!!"
 
+
 cd ../../../
 rm -Rf pbc
+
 
 echo "\n"
 echo "****************************"
