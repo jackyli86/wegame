@@ -52,10 +52,12 @@ local function mainloop()
 end
 
 function CMD.aoi_enter(id,mode,pos_x,pos_y)
+    skynet.error('aoi_enter:{'..id..','..mode..','..pos_x..','..pos_y..'}')
     aoi.aoi_update2d(space,id,mode,pos_x,pos_y)
 end
 
 function CMD.aoi_leave(id)
+    skynet.error('aoi_leave:{'..id..'}')
     aoi.aoi_update2d(space,id,'d',0,0)
 end
 
