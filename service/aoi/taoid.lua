@@ -6,7 +6,7 @@ local CMD = {}
 local fmod = math.fmod
 local random = math.random
 
-local npcBornId = 0;
+local npcBornId = 2;
 local npcDeadId = 0;
 local npcset = {}
 local counter = 0
