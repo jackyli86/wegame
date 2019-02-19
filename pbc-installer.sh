@@ -2,6 +2,10 @@
 
 ## install protobuf
 yum install protobuf-c-compiler.x86_64 protobuf-compiler.x86_64 
+if [ $? != 0 ]
+then
+    apt-get install protobuf-c-compiler.x86_64 protobuf-compiler.x86_64 
+fi
 
 echo 'protobuf version:'
 protoc --version
