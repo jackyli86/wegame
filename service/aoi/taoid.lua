@@ -1,5 +1,6 @@
 local skynet = require "skynet"
 require "skynet.manager"
+local json = require "json.json"
 
 local CMD = {}
 
@@ -79,12 +80,8 @@ local function mainloop()
 end
 
 function CMD.aoi_callback(watcherid,markers)
-    msg = watcherid .. ' => ['
-    for markerid in ipairs(markers) do
-        msg = msg .. markerid .. ','
-    end
-    msg = msg .. ' ]'
-
+    msg = watcherid .. ' => '
+    msg = msg .. json.encode(markers) 
     skynet.error(msg)
 end
 
