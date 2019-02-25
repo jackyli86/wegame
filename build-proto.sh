@@ -1,9 +1,10 @@
 #!/bin/bash
 
+cd proto/
 
 filelist=`ls -l | awk '{ print $9 }'`
 
-#echo $filelist
+echo $filelist
 
 filenamesuffix='.proto'
 generatefilesuffix='.pb'
