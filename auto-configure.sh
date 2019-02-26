@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remote repo
 SkynetRemoteRepo='https://github.com/cloudwu/skynet.git'
