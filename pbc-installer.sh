@@ -7,25 +7,24 @@ then
     apt-get install protobuf-c-compiler protobuf-compiler 
 fi
 
-echo 'protobuf version:'
+# protoc version
 protoc --version
 
+# if not exist , clone pbc
 if [ ! -d pbc ]
 then
-    echo 'begin clone pbc.git ...'
     git clone https://github.com/cloudwu/pbc.git
-    echo 'finish clone pbc.git!!!'
 fi
 
-
-rootdir=${pwd}
+# some important path
+rootdir=$(pwd)
 protobuf_lua_path="${rootdir}/lib"
 protobuf_so_path="${rootdir}/luaclib"
 
-# 转义 / 为 sed 默认分隔符 ,这里不处理会出错
+
+# modify makefile file with newcontent replace oldcontent
 oldcontent="\/usr\/local\/include"
 newcontent="\/data\/work\/wegame\/skynet\/3rd\/lua" #${lua53dir}
-
 
 # make pbc static lib
 cd pbc  
@@ -34,7 +33,6 @@ if [ $? != 0 ]
 then
 	exit 1
 fi
-
 
 # modify lua path & make protobuf.so
 cd binding/lua53
@@ -47,12 +45,11 @@ fi
 
 
 # copy protobuf.lua&protobuf.so
-echo "begin  copy protobuf.lua&protobuf.so ..."
 cp -f protobuf.lua ${protobuf_lua_path}
 cp -f protobuf.so ${protobuf_so_path}
 echo "finish copy protobuf.lua&protobuf.so !!!"
 
-
+# remove pbc 
 cd ../../../
 rm -Rf pbc
 
