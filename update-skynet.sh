@@ -20,5 +20,9 @@ git merge tmp
 # 5 delete tmp branch
 git branch -D tmp
 
-echo "complete"
+# 6 enter root dir
+cd ..
 
+echo "****************************"
+echo "******configure ok !!!******"
+echo "****************************"

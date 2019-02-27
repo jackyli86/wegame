@@ -28,6 +28,11 @@ fi
 # add remote repo
 git remote add skynet-remote $SkynetRemoteRepo
 
-echo "config sucess,congratulations"
-
+# enter root dir
 cd ..
+
+echo "****************************"
+echo "******configure ok !!!******"
+echo "****************************"
+
+

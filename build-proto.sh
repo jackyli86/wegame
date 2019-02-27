@@ -22,8 +22,9 @@ do
 		#echo ${i:0-6}
 		filenamelen=${#i}-6
 		filename=${i:0:$filenamelen}
+		
 		#echo $i,$filename	
-	    	sudo protoc --descriptor_set_out ${filename}${generatefilesuffix} $i
+		protoc --descriptor_set_out ${filename}${generatefilesuffix} $i
 
 		# protoc return code
 		if [ $? -eq 0 ]

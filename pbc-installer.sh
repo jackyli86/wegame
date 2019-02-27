@@ -49,7 +49,7 @@ cp -f protobuf.lua ${protobuf_lua_path}
 cp -f protobuf.so ${protobuf_so_path}
 echo "finish copy protobuf.lua&protobuf.so !!!"
 
-# remove pbc 
+# enter root dir & remove pbc 
 cd ../../../
 rm -Rf pbc
 
