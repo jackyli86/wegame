@@ -2,7 +2,8 @@
 
 # remote repo
 SkynetRemoteRepo='https://github.com/cloudwu/skynet.git'
-SkynetSelfRepo='git@f2095r1007.iask.in:/home/datadisk/gitrepo/skynet.git'
+# SkynetSelfRepo='git@f2095r1007.iask.in:/home/datadisk/gitrepo/skynet.git'
+SkynetSelfRepo='ssh://git@www.newbee.tech:10022/home/datadisk/gitrepo/skynet.git'
 
 # git version
 git --version
