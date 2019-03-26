@@ -21,10 +21,12 @@ rootdir=$(pwd)
 protobuf_lua_path="${rootdir}/lib"
 protobuf_so_path="${rootdir}/luaclib"
 
-
 # modify makefile file with newcontent replace oldcontent
 oldcontent="\/usr\/local\/include"
-newcontent="\/data\/work\/wegame\/skynet\/3rd\/lua" #${lua53dir}
+newcontent="${rootdir}/skynet/3rd/lua" 
+
+oldcontent=${oldcontent////\/}
+newcontent=${newcontent////\/}
 
 # make pbc static lib
 cd pbc  
