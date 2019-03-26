@@ -25,9 +25,12 @@ protobuf_so_path="${rootdir}/luaclib"
 oldcontent="/usr/local/include"
 newcontent="${rootdir}/skynet/3rd/lua" 
 
-oldcontent=${oldcontent////\/}
-newcontent=${newcontent////\/}
+# use "\/" replace "/"
+substring="/"
+replacestring="\/"
 
+oldcontent=${oldcontent//${substring}/${replacestring}}
+newcontent=${newcontent//${substring}/${replacestring}}
 # make pbc static lib
 cd pbc  
 make
