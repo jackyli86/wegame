@@ -22,7 +22,7 @@ protobuf_lua_path="${rootdir}/lib"
 protobuf_so_path="${rootdir}/luaclib"
 
 # modify makefile file with newcontent replace oldcontent
-oldcontent="\/usr\/local\/include"
+oldcontent="/usr/local/include"
 newcontent="${rootdir}/skynet/3rd/lua" 
 
 oldcontent=${oldcontent////\/}
