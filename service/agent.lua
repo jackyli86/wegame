@@ -2,8 +2,6 @@ local skynet = require "skynet"
 local netpack = require "skynet.netpack"
 local socket = require "skynet.socket"
 
-local json = require "json.json"
-
 -- 注意upvalue
 local WATCHDOG
 local client_fd
@@ -13,7 +11,7 @@ local function send_package(pack)
 end
 
 local protocol_type = skynet.getenv('protocol_type')
-
+skynet.error("agent use 【" .. protocol_type .. "】 protocol")
 local supported_protocols = {
 	lua = {
 		unpack = function (msg, sz)	
