@@ -23,6 +23,7 @@ local function say_bye(fd)
 	if(pack == "quit") then
 		socket.close(fd)
 		print("bye,skynet")
+		os.exit(0)
 	end
 end
 
