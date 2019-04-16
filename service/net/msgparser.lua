@@ -42,10 +42,11 @@ end
 
 function CMD.pack_json(msg_id,decode_key,msg_body)
     msg_body['msg_id'] = msg_id   
-    return string.pack(">s2", msg_body)
+    return string.pack(">s2", json.encode(msg_body))
 end
 
 function CMD.unpack_json(msg_body)
+    msg_body = json.decode(msg_body)
     msg_id = msg_body['msg_id']  
 
     assert(msgrouter[msg_id])

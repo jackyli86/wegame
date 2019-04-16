@@ -42,10 +42,7 @@ local supported_protocols = {
 	},
 	json = {
 		unpack = function (msg, sz)	
-			local _msg = skynet.tostring(msg,sz)			
-			msg_body = json.decode(_msg)
-			assert(msg_body)
-			return msg_body
+			return skynet.tostring(msg,sz)
 		end,
 		dispatch = function (fd, _,msg_body)
 			assert(fd == client_fd)	-- You can use fd to reply message
