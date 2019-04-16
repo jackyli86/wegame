@@ -5,6 +5,9 @@ if _VERSION ~= "Lua 5.3" then
 	error "Use lua 5.3"
 end
 
+local protocol_type = ...
+print(protocol_type)
+
 local socket = require "client.socket"
 local protobuf = require "protobuf"
 local msgrouter = require "msgrouter"
@@ -13,6 +16,7 @@ local json = require "json.json"
 protobuf.register_file("../proto/test.pb");
 
 local fd = assert(socket.connect("127.0.0.1", 8001))
+
 
 local function say_bye(fd)
 	local pack = "quit"
@@ -23,22 +27,29 @@ local function say_bye(fd)
 end
 
 local function send_msg(fd,msg_id,decode_key,msg_table)
-	local msg_header_src = protobuf.encode('msg_header',{
-		msg_id = msg_id,
-		decode_key = decode_key
-	})
 
-	local t = protobuf.decode('msg_header',msg_header_src)
-	print(t.msg_id,t.decode_key)
+	if protocol_type == "lua" then
+		local msg_header_src = protobuf.encode('msg_header',{
+			msg_id = msg_id,
+			decode_key = decode_key
+		})
+		local t = protobuf.decode('msg_header',msg_header_src)
+		print(t.msg_id,t.decode_key)
+	
+		local msg_header = string.pack(">s2", msg_header_src)
+		assert(msgrouter[msg_id])
+		local msg_def = msgrouter[msg_id]
+	
+		local msg_body = protobuf.encode(msg_def.c2s,msg_table)
+		msg_send = string.pack(">s2", msg_header .. msg_body)
+	
+		print("header1:"..msg_header_src:len(),"header2:"..msg_header:len(),"body1:"..msg_body:len(),"body2:"..msg_send:len())
+	elseif protocol_type == "json" then
+		msg_table.msg_id = msg_id
 
-	local msg_header = string.pack(">s2", msg_header_src)
-	assert(msgrouter[msg_id])
-	local msg_def = msgrouter[msg_id]
+		msg_send = string.pack(">s2", json.encode(msg_table))
+	end
 
-	local msg_body = protobuf.encode(msg_def.c2s,msg_table)
-	msg_send = string.pack(">s2", msg_header .. msg_body)
-
-	print("header1:"..msg_header_src:len(),"header2:"..msg_header:len(),"body1:"..msg_body:len(),"body2:"..msg_send:len())
 
 	socket.send(fd,msg_send)
 end
@@ -48,12 +59,14 @@ local function unpack_package(text)
 	if size < 2 then
 		return nil, text
 	end
+
 	local s = text:byte(1) * 256 + text:byte(2)
 	if size < s+2 then
 		return nil, text
 	end
 	
 	return text:sub(3,2+s), text:sub(3+s)
+
 end
 
 local function recv_package(last)
@@ -85,22 +98,28 @@ local function dispatch_package()
 			break
 		end
 
-		local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
+		local body = nil
+		if protocol_type == "lua" then
+			local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
 
-		local _msg_offset = 2;
-		local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
+			local _msg_offset = 2;
+			local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
+	
+			_msg_offset = _msg_offset + msg_header_len
+			local msg_body = _msg:sub(1 + _msg_offset);
+	
+			local struct_header = msgrouter[0];
+			msg_header = protobuf.decode(struct_header.s2c,msg_header)
+			assert(msg_header.msg_id and msg_header.decode_key)
+	
+			assert(msgrouter[msg_header.msg_id])
+			local struct_body = msgrouter[msg_header.msg_id]
+			body = protobuf.decode(struct_body.s2c,msg_body)
+			setmetatable(body,nil)
+		elseif protocol_type == "json" then
+			body = _msg
+		end
 
-		_msg_offset = _msg_offset + msg_header_len
-		local msg_body = _msg:sub(1 + _msg_offset);
-
-		local struct_header = msgrouter[0];
-		msg_header = protobuf.decode(struct_header.s2c,msg_header)
-		assert(msg_header.msg_id and msg_header.decode_key)
-
-		assert(msgrouter[msg_header.msg_id])
-		local struct_body = msgrouter[msg_header.msg_id]
-		local body = protobuf.decode(struct_body.s2c,msg_body)
-		setmetatable(body,nil)
 		print(json.encode(body))
 		--print(v)
 	end
