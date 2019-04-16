@@ -36,8 +36,9 @@ local supported_protocols = {
 		end
 	},
 	json = {
-		unpack = function (msg, sz)				
-			msg_body = json.decode(msg)
+		unpack = function (msg, sz)	
+			local _msg = skynet.tostring(msg,sz)			
+			msg_body = json.decode(_msg)
 			assert(msg_body)
 			return msg_body
 		end,
