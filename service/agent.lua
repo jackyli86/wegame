@@ -8,6 +8,9 @@ local json = require "json.json"
 local WATCHDOG
 local client_fd
 
+local function send_package(pack)
+	socket.write(client_fd, pack)
+end
 
 local protocol_type = skynet.getenv('protocol_type')
 
@@ -66,10 +69,6 @@ local supported_protocols = {
 assert(supported_protocols[protocol_type],"unsupported protocol type")
 
 local CMD = {}
-
-local function send_package(pack)
-	socket.write(client_fd, pack)
-end
 
 skynet.register_protocol {
 	name = "client",
