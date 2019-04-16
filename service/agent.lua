@@ -4,16 +4,63 @@ local socket = require "skynet.socket"
 
 local json = require "json.json"
 
-local protobuf = require "protobuf"
-local root_path = skynet.getenv('root')
-local pb_files = {
-	'../proto/test.pb'
+local protocol_type = skynet.getenv('protocol_type')
+
+local supported_protocols = {
+	lua = {
+		unpack = function (msg, sz)	
+			local _msg = skynet.tostring(msg,sz)
+			local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
+	
+			local _msg_offset = 2;
+			local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
+	
+			_msg_offset = _msg_offset + msg_header_len
+			local msg_body = _msg:sub(1 + _msg_offset);
+	
+			return msg_header,msg_body
+		end,
+		dispatch = function (fd, _,msg_header,msg_body)
+			assert(fd == client_fd)	-- You can use fd to reply message
+	
+			skynet.ignoreret()	-- session is fd, don't call skynet.ret
+			--skynet.trace()
+	
+			-- unpack
+			--msgid,msg,name,command
+			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg_header,msg_body)
+			local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
+			-- pack
+			local msg_send = skynet.call('.msgparser','lua','pack',msgid,1,msg_ret)
+			send_package(msg_send);
+		end
+	},
+	json = {
+		unpack = function (msg, sz)				
+			msg_body = json.decode(msg)
+			assert(msg_body)
+			return msg_body
+		end,
+		dispatch = function (fd, _,msg_body)
+			assert(fd == client_fd)	-- You can use fd to reply message
+	
+			skynet.ignoreret()	-- session is fd, don't call skynet.ret
+			--skynet.trace()
+	
+			-- unpack
+			--msgid,msg,name,command
+			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack_json',msg_body)
+
+			local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
+			
+			-- pack
+			local msg_send = skynet.call('.msgparser','lua','pack_json',msgid,1,msg_ret)
+			send_package(msg_send);
+		end
+	}
 }
 
--- 注册pb files
-for _,pbfile in ipairs(pb_files) do
-	protobuf.register_file(root_path .. pbfile)
-end
+assert(supported_protocols[protocol_type],"unsupported protocol type")
 
 local WATCHDOG
 local client_fd
@@ -27,32 +74,8 @@ end
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
-	unpack = function (msg, sz)	
-		local _msg = skynet.tostring(msg,sz)
-		local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
-
-		local _msg_offset = 2;
-		local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
-
-		_msg_offset = _msg_offset + msg_header_len
-		local msg_body = _msg:sub(1 + _msg_offset);
-
-		return msg_header,msg_body
-	end,
-	dispatch = function (fd, _,msg_header,msg_body)
-		assert(fd == client_fd)	-- You can use fd to reply message
-
-		skynet.ignoreret()	-- session is fd, don't call skynet.ret
-		--skynet.trace()
-
-		-- unpack
-		--msgid,msg,name,command
-		local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg_header,msg_body)
-		local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
-		-- pack
-		local msg_send = skynet.call('.msgparser','lua','pack',msgid,1,msg_ret)
-		send_package(msg_send);
-	end
+	unpack = supported_protocols[protocol_type]['unpack'],
+	dispatch = supported_protocols[protocol_type]['dispatch']
 }
 
 function CMD.start(conf)

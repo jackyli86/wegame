@@ -40,6 +40,20 @@ function CMD.unpack(...)
     return header.msg_id,protobuf.decode(struct_body.c2s,body),struct_body.name,struct_body.command
 end
 
+function CMD.pack_json(msg_id,decode_key,msg_body)
+    msg_body['msg_id'] = msg_id   
+    return string.pack(">s2", msg_body)
+end
+
+function CMD.unpack_json(msg_body)
+    msg_id = msg_body['msg_id']  
+
+    assert(msgrouter[msg_id])
+    local struct_body = msgrouter[msg_id]
+    -- msgid msg name command
+    return msg_id,msg_body,struct_body.name,struct_body.command
+end
+
 skynet.start(function()
 
     root_path = skynet.getenv('root')
