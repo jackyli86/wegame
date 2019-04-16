@@ -2,6 +2,7 @@ local skynet = require "skynet"
 require "skynet.manager"
 local msgrouter = require "msgrouter"
 local protobuf = require "protobuf"
+local json     = require "json.json"
     
 local CMD = {}
 
