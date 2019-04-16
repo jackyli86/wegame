@@ -4,6 +4,11 @@ local socket = require "skynet.socket"
 
 local json = require "json.json"
 
+-- 注意upvalue
+local WATCHDOG
+local client_fd
+
+
 local protocol_type = skynet.getenv('protocol_type')
 
 local supported_protocols = {
@@ -62,9 +67,6 @@ local supported_protocols = {
 }
 
 assert(supported_protocols[protocol_type],"unsupported protocol type")
-
-local WATCHDOG
-local client_fd
 
 local CMD = {}
 
