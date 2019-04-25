@@ -6,17 +6,15 @@ local json     = require "json.json"
     
 local CMD = {}
 
-function CMD.pack(...)
-    local argv = {...}
-
-    local msg_id        = argv[1]
-    local decode_key    = argv[2]
-    local msg_body      = argv[3]
-
-    local msg_header_src = protobuf.encode('msg_header',{
-        msg_id = msg_id,
-        decode_key = decode_key
-    })
+function CMD.pack(msg_id,decode_key,msg_body)
+    
+    local msg_header_src = protobuf.encode(
+        'msg_header',
+        {
+            msg_id = msg_id,
+            decode_key = decode_key
+        }
+    )
 
     local msg_header = string.pack(">s2", msg_header_src)
     assert(msgrouter[msg_id])
@@ -26,19 +24,25 @@ function CMD.pack(...)
     return string.pack(">s2", msg_header .. msg_body)
 end
 
-function CMD.unpack(...)
-    local argv = {...}
-    local header = argv[1]
-    local body   = argv[2]
+function CMD.unpack(msg,sz)
+    local _msg = skynet.tostring(msg,sz)
+    local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)    
+    skynet.error("header len : " .. msg_header_len)
+
+    local _msg_offset = 2;
+    local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
+
+    _msg_offset = _msg_offset + msg_header_len
+    local msg_body = _msg:sub(1 + _msg_offset);
 
     local struct_header = msgrouter[0];
-    header = protobuf.decode(struct_header.c2s,header)
-    assert(header.msg_id and header.decode_key)
+    local header = protobuf.decode(struct_header.c2s,msg_header)
+    assert(header and header.msg_id and header.decode_key)
 
     assert(msgrouter[header.msg_id])
     local struct_body = msgrouter[header.msg_id]
     -- msgid msg name command
-    return header.msg_id,protobuf.decode(struct_body.c2s,body),struct_body.name,struct_body.command
+    return header.msg_id,protobuf.decode(struct_body.c2s,msg_body),struct_body.name,struct_body.command
 end
 
 function CMD.pack_json(msg_id,decode_key,msg_body)

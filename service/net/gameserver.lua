@@ -15,10 +15,10 @@ skynet.start(function()
 	--]=]
 	local watchdog = skynet.newservice("watchdog")
 	skynet.call(watchdog, "lua", "start", {
-		port = 8001,
+		port = 15555,
 		maxclient = max_client,
 		nodelay = true,
 	})
-	skynet.error("Watchdog listen on", 8001)
+	skynet.error("Watchdog listen on", 15555)
 	skynet.exit()
 end)

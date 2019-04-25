@@ -15,18 +15,10 @@ skynet.error("agent use 【" .. protocol_type .. "】 protocol")
 local supported_protocols = {
 	lua = {
 		unpack = function (msg, sz)	
-			local _msg = skynet.tostring(msg,sz)
-			local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)	
-	
-			local _msg_offset = 2;
-			local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
-	
-			_msg_offset = _msg_offset + msg_header_len
-			local msg_body = _msg:sub(1 + _msg_offset);
-	
-			return msg_header,msg_body
+			skynet.error("recv msg len:" .. sz)
+			return msg,sz
 		end,
-		dispatch = function (fd, _,msg_header,msg_body)
+		dispatch = function (fd, _,msg,sz)
 			assert(fd == client_fd)	-- You can use fd to reply message
 	
 			skynet.ignoreret()	-- session is fd, don't call skynet.ret
@@ -34,7 +26,8 @@ local supported_protocols = {
 	
 			-- unpack
 			--msgid,msg,name,command
-			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg_header,msg_body)
+			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg,sz)
+			print(msgid,msg,name,command)
 			local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
 			-- pack
 			local msg_send = skynet.call('.msgparser','lua','pack',msgid,1,msg_ret)
@@ -81,6 +74,14 @@ function CMD.start(conf)
 	WATCHDOG = conf.watchdog
 
 	client_fd = fd
+	skynet.fork(function()
+		local msg_to_client = "hello,I'm skynet,nice to meet you!"
+		msg_to_client = string.pack("<s2", msg_to_client)
+		--while(true) do
+		--	send_package(msg_to_client)
+		--	skynet.sleep(10)
+		--end
+	end)
 	skynet.call(gate, "lua", "forward", fd)
 end
 
