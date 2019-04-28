@@ -24,8 +24,7 @@ function CMD.pack(msg_id,decode_key,msg_body)
     return string.pack(">s2", msg_header .. msg_body)
 end
 
-function CMD.unpack(msg,sz)
-    local _msg = skynet.tostring(msg,sz)
+function CMD.unpack(_msg)    
     local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)    
     skynet.error("header len : " .. msg_header_len)
 
@@ -75,6 +74,7 @@ skynet.start(function()
     skynet.dispatch("lua", function(_, _,command, ...)
         assert(CMD[command])
         local f = CMD[command]
+        
         skynet.ret(skynet.pack(f(...)))
     end)
     

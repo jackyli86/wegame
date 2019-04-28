@@ -25,8 +25,8 @@ local supported_protocols = {
 			--skynet.trace()
 	
 			-- unpack
-			--msgid,msg,name,command
-			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',msg,sz)
+			--msgid,msg,name,command skynet.redirect(agent, c.client, "client", fd, msg, sz)
+			local msgid,msg,name,command = skynet.call('.msgparser','lua','unpack',skynet.tostring(msg,sz))
 			print(msgid,msg,name,command)
 			local msg_ret = skynet.call(name ,'lua' ,command ,msgid ,msg )
 			-- pack
