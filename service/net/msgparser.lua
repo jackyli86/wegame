@@ -2,8 +2,7 @@ local skynet = require "skynet"
 require "skynet.manager"
 local msgrouter = require "msgrouter"
 local protobuf = require "protobuf"
-local json     = require "json.json"
-    
+
 local CMD = {}
 
 function CMD.pack(msg_id,decode_key,msg_body)
@@ -25,8 +24,7 @@ function CMD.pack(msg_id,decode_key,msg_body)
 end
 
 function CMD.unpack(_msg)    
-    local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)    
-    skynet.error("header len : " .. msg_header_len)
+    local msg_header_len = _msg:byte(1)*256 + _msg:byte(2)
 
     local _msg_offset = 2;
     local msg_header = _msg:sub(1 + _msg_offset,msg_header_len + _msg_offset);
@@ -40,23 +38,9 @@ function CMD.unpack(_msg)
 
     assert(msgrouter[header.msg_id])
     local struct_body = msgrouter[header.msg_id]
+    
     -- msgid msg name command
     return header.msg_id,protobuf.decode(struct_body.c2s,msg_body),struct_body.name,struct_body.command
-end
-
-function CMD.pack_json(msg_id,decode_key,msg_body)
-    msg_body['msg_id'] = msg_id   
-    return string.pack(">s2", json.encode(msg_body))
-end
-
-function CMD.unpack_json(msg_body)
-    msg_body = json.decode(msg_body)
-    msg_id = msg_body['msg_id']  
-
-    assert(msgrouter[msg_id])
-    local struct_body = msgrouter[msg_id]
-    -- msgid msg name command
-    return msg_id,msg_body,struct_body.name,struct_body.command
 end
 
 skynet.start(function()
