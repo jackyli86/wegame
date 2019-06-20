@@ -7,12 +7,14 @@ skynet.start(function()
     
     skynet.error("Server start")
 
-    skynet.newservice("gameserver")
-
     skynet.newservice("msgparser")
     skynet.newservice("fishpool")
 
     skynet.newservice("aoid")
+
+    skynet.newservice("AccountMgr")
+
+    skynet.newservice("gameserver")
     -- skynet.newservice("taoid")
     
 	-- 该端口已被禅道占用
